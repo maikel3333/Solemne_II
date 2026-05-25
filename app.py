@@ -33,7 +33,7 @@ from graficos import (
 # ─────────────────────────────────────────────
 st.set_page_config(
     page_title="Establecimientos de Salud - Chile",
-    page_icon="🏥",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -46,7 +46,7 @@ try:
     df_raw = obtener_todos_los_datos()
     df = limpiar_datos(df_raw)
 except requests.exceptions.RequestException as e:
-    st.error(f"❌ Error al conectar con la API del MINSAL: {e}")
+    st.error(f"Error al conectar con la API del MINSAL: {e}")
     st.stop()
 
 
@@ -57,24 +57,24 @@ _ = st.sidebar.image(
     "https://www.minsal.cl/wp-content/uploads/2015/08/logo.png",
     width=160,
 )
-st.sidebar.title("🔍 Filtros")
+st.sidebar.title("Filtros")
 st.sidebar.markdown("Ajusta los filtros para explorar los datos.")
 
 regiones = ["Todas"] + sorted(df["RegionGlosa"].dropna().unique().tolist())
-region_sel = st.sidebar.selectbox("📍 Región", regiones)
+region_sel = st.sidebar.selectbox("Región", regiones)
 
 sistemas = ["Todos"] + sorted(df["TipoSistemaSaludGlosa"].dropna().unique().tolist())
-sistema_sel = st.sidebar.selectbox("🏛️ Sistema de Salud", sistemas)
+sistema_sel = st.sidebar.selectbox("Sistema de Salud", sistemas)
 
 estados = ["Todos"] + sorted(df["EstadoFuncionamiento"].dropna().unique().tolist())
-estado_sel = st.sidebar.selectbox("✅ Estado de Funcionamiento", estados)
+estado_sel = st.sidebar.selectbox("Estado de Funcionamiento", estados)
 
 niveles = (
     ["Todos"] + sorted(df["NivelAtencionEstabglosa"].dropna().unique().tolist())
     if "NivelAtencionEstabglosa" in df.columns
     else ["Todos"]
 )
-nivel_sel = st.sidebar.selectbox("🔬 Nivel de Atención", niveles)
+nivel_sel = st.sidebar.selectbox("Nivel de Atención", niveles)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown(
@@ -93,7 +93,7 @@ df_filtrado = aplicar_filtros(df, region_sel, sistema_sel, estado_sel, nivel_sel
 # ─────────────────────────────────────────────
 # ENCABEZADO
 # ─────────────────────────────────────────────
-st.title("🏥 Establecimientos de Salud en Chile")
+st.title("Establecimientos de Salud en Chile")
 st.markdown(
     "Análisis y visualización de los establecimientos de salud vigentes en Chile, "
     "obtenidos en tiempo real desde la API del Ministerio de Salud."
@@ -106,17 +106,17 @@ st.markdown("---")
 # ─────────────────────────────────────────────
 kpis = calcular_kpis(df_filtrado)
 col1, col2, col3, col4 = st.columns(4)
-col1.metric("🏥 Total establecimientos", f"{kpis['total']:,}")
-col2.metric("🟦 Públicos",               f"{kpis['publicos']:,}")
-col3.metric("🟧 Privados",               f"{kpis['privados']:,}")
-col4.metric("🚑 Con urgencia",           f"{kpis['con_urgencia']:,}")
+col1.metric("Total establecimientos", f"{kpis['total']:,}")
+col2.metric("Públicos",               f"{kpis['publicos']:,}")
+col3.metric("Privados",               f"{kpis['privados']:,}")
+col4.metric("Con urgencia",           f"{kpis['con_urgencia']:,}")
 st.markdown("---")
 
 
 # ─────────────────────────────────────────────
 # GRÁFICO 1 — Por Región
 # ─────────────────────────────────────────────
-st.subheader("📊 Distribución de establecimientos por región")
+st.subheader("Distribución de establecimientos por región")
 fig1 = grafico_barras_horizontales(
     serie=conteo_por_columna(df_filtrado, "RegionGlosa"),
     titulo="Establecimientos de salud por región",
@@ -128,7 +128,7 @@ st.pyplot(fig1)
 # ─────────────────────────────────────────────
 # GRÁFICO 2 — Sistema Público vs Privado
 # ─────────────────────────────────────────────
-st.subheader("🔵 Distribución por sistema de salud")
+st.subheader("Distribución por sistema de salud")
 fig2 = grafico_torta(
     serie=conteo_por_columna(df_filtrado, "TipoSistemaSaludGlosa"),
     titulo="Establecimientos según sistema de salud",
@@ -139,7 +139,7 @@ st.pyplot(fig2)
 # ─────────────────────────────────────────────
 # GRÁFICO 3 — Nivel de Atención
 # ─────────────────────────────────────────────
-st.subheader("🔬 Establecimientos por nivel de atención")
+st.subheader("Establecimientos por nivel de atención")
 fig3 = grafico_barras_verticales(
     serie=conteo_por_columna(df_filtrado, "NivelAtencionEstabglosa"),
     titulo="Establecimientos por nivel de atención",
@@ -152,7 +152,7 @@ st.pyplot(fig3)
 # ─────────────────────────────────────────────
 # GRÁFICO 4 — Top 10 Tipos de Establecimiento
 # ─────────────────────────────────────────────
-st.subheader("🏢 Tipos de establecimiento más frecuentes")
+st.subheader("Tipos de establecimiento más frecuentes")
 fig4 = grafico_barras_horizontales(
     serie=conteo_por_columna(df_filtrado, "TipoEstablecimientoGlosa", top=10),
     titulo="Top 10 tipos de establecimientos de salud",
@@ -164,7 +164,7 @@ st.pyplot(fig4)
 # ─────────────────────────────────────────────
 # GRÁFICO 5 — Dependencia Administrativa
 # ─────────────────────────────────────────────
-st.subheader("🏛️ Dependencia administrativa")
+st.subheader("Dependencia administrativa")
 fig5 = grafico_barras_verticales(
     serie=conteo_por_columna(df_filtrado, "DependenciaAdministrativa", top=8),
     titulo="Establecimientos por dependencia administrativa",
@@ -179,7 +179,7 @@ st.pyplot(fig5)
 # TABLA DE DATOS
 # ─────────────────────────────────────────────
 st.markdown("---")
-st.subheader("📋 Tabla de establecimientos")
+st.subheader("Tabla de establecimientos")
 
 cols_mostrar = columnas_disponibles(df_filtrado, COLUMNAS_TABLA)
 st.dataframe(
