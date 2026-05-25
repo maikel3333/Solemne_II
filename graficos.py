@@ -142,3 +142,38 @@ def grafico_torta(
     ax.set_title(titulo, fontsize=12, fontweight="bold", pad=12)
     plt.tight_layout()
     return fig
+
+
+def datos_para_mapa(
+    df: pd.DataFrame,
+    lat_col: str = "Latitud",
+    lon_col: str = "Longitud",
+    max_puntos: int = 5000,
+) -> pd.DataFrame:
+    """
+    Prepara un DataFrame con columnas `lat` y `lon` para usar en st.map().
+
+    Parametros:
+        df (pd.DataFrame): DataFrame de entrada.
+        lat_col (str): Nombre de la columna de latitud.
+        lon_col (str): Nombre de la columna de longitud.
+        max_puntos (int): Maximo de puntos a mostrar para mejorar rendimiento.
+
+    Retorna:
+        pd.DataFrame: DataFrame con columnas `lat` y `lon` limpias.
+    """
+    if lat_col not in df.columns or lon_col not in df.columns:
+        return pd.DataFrame(columns=["lat", "lon"])
+
+    mapa = df[[lat_col, lon_col]].rename(columns={lat_col: "lat", lon_col: "lon"}).copy()
+    mapa["lat"] = pd.to_numeric(mapa["lat"], errors="coerce")
+    mapa["lon"] = pd.to_numeric(mapa["lon"], errors="coerce")
+    mapa = mapa.dropna(subset=["lat", "lon"])
+
+    # Filtra coordenadas fuera de rango valido.
+    mapa = mapa[mapa["lat"].between(-90, 90) & mapa["lon"].between(-180, 180)]
+
+    if max_puntos and len(mapa) > max_puntos:
+        mapa = mapa.sample(n=max_puntos, random_state=42)
+
+    return mapa

@@ -25,6 +25,7 @@ from graficos import (
     grafico_barras_horizontales,
     grafico_barras_verticales,
     grafico_torta,
+    datos_para_mapa,
     PALETA,
 )
 
@@ -173,6 +174,22 @@ fig5 = grafico_barras_verticales(
     rotar_etiquetas=True,
 )
 st.pyplot(fig5)
+
+
+# ─────────────────────────────────────────────
+# MAPA GEOGRÁFICO
+# ─────────────────────────────────────────────
+st.subheader("Mapa geográfico de establecimientos")
+df_mapa = datos_para_mapa(df_filtrado)
+
+if df_mapa.empty:
+    st.info("No hay coordenadas disponibles para los filtros seleccionados.")
+else:
+    st.map(df_mapa)
+    st.caption(
+        f"Mostrando {len(df_mapa):,} puntos georreferenciados "
+        "(Latitud/Longitud)."
+    )
 
 
 # ─────────────────────────────────────────────
