@@ -53,7 +53,7 @@ except requests.exceptions.RequestException as e:
 # ─────────────────────────────────────────────
 # SIDEBAR — FILTROS
 # ─────────────────────────────────────────────
-st.sidebar.image(
+_ = st.sidebar.image(
     "https://www.minsal.cl/wp-content/uploads/2015/08/logo.png",
     width=160,
 )
