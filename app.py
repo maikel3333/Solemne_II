@@ -51,13 +51,8 @@ except requests.exceptions.RequestException as e:
     st.stop()
 
 
-# ─────────────────────────────────────────────
 # SIDEBAR — FILTROS
-# ─────────────────────────────────────────────
-_ = st.sidebar.image(
-    "https://www.minsal.cl/wp-content/uploads/2015/08/logo.png",
-    width=160,
-)
+
 st.sidebar.title("Filtros")
 st.sidebar.markdown("Ajusta los filtros para explorar los datos.")
 
@@ -85,15 +80,15 @@ st.sidebar.markdown(
 )
 
 
-# ─────────────────────────────────────────────
+
 # APLICAR FILTROS
-# ─────────────────────────────────────────────
+
 df_filtrado = aplicar_filtros(df, region_sel, sistema_sel, estado_sel, nivel_sel)
 
 
-# ─────────────────────────────────────────────
+
 # ENCABEZADO
-# ─────────────────────────────────────────────
+
 st.title("Establecimientos de Salud en Chile")
 st.markdown(
     "Análisis y visualización de los establecimientos de salud vigentes en Chile, "
@@ -102,9 +97,9 @@ st.markdown(
 st.markdown("---")
 
 
-# ─────────────────────────────────────────────
+
 # KPIs
-# ─────────────────────────────────────────────
+
 kpis = calcular_kpis(df_filtrado)
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total establecimientos", f"{kpis['total']:,}")
@@ -114,9 +109,9 @@ col4.metric("Con urgencia",           f"{kpis['con_urgencia']:,}")
 st.markdown("---")
 
 
-# ─────────────────────────────────────────────
+
 # GRÁFICO 1 — Por Región
-# ─────────────────────────────────────────────
+
 st.subheader("Distribución de establecimientos por región")
 fig1 = grafico_barras_horizontales(
     serie=conteo_por_columna(df_filtrado, "RegionGlosa"),
@@ -126,9 +121,9 @@ fig1 = grafico_barras_horizontales(
 st.pyplot(fig1)
 
 
-# ─────────────────────────────────────────────
+
 # GRÁFICO 2 — Sistema Público vs Privado
-# ─────────────────────────────────────────────
+
 st.subheader("Distribución por sistema de salud")
 fig2 = grafico_torta(
     serie=conteo_por_columna(df_filtrado, "TipoSistemaSaludGlosa"),
@@ -137,9 +132,9 @@ fig2 = grafico_torta(
 st.pyplot(fig2)
 
 
-# ─────────────────────────────────────────────
+
 # GRÁFICO 3 — Nivel de Atención
-# ─────────────────────────────────────────────
+
 st.subheader("Establecimientos por nivel de atención")
 fig3 = grafico_barras_verticales(
     serie=conteo_por_columna(df_filtrado, "NivelAtencionEstabglosa"),
@@ -150,9 +145,9 @@ fig3 = grafico_barras_verticales(
 st.pyplot(fig3)
 
 
-# ─────────────────────────────────────────────
+
 # GRÁFICO 4 — Top 10 Tipos de Establecimiento
-# ─────────────────────────────────────────────
+
 st.subheader("Tipos de establecimiento más frecuentes")
 fig4 = grafico_barras_horizontales(
     serie=conteo_por_columna(df_filtrado, "TipoEstablecimientoGlosa", top=10),
@@ -162,9 +157,9 @@ fig4 = grafico_barras_horizontales(
 st.pyplot(fig4)
 
 
-# ─────────────────────────────────────────────
+
 # GRÁFICO 5 — Dependencia Administrativa
-# ─────────────────────────────────────────────
+
 st.subheader("Dependencia administrativa")
 fig5 = grafico_barras_verticales(
     serie=conteo_por_columna(df_filtrado, "DependenciaAdministrativa", top=8),
@@ -176,9 +171,8 @@ fig5 = grafico_barras_verticales(
 st.pyplot(fig5)
 
 
-# ─────────────────────────────────────────────
 # MAPA GEOGRÁFICO
-# ─────────────────────────────────────────────
+
 st.subheader("Mapa geográfico de establecimientos")
 df_mapa = datos_para_mapa(df_filtrado)
 
@@ -192,9 +186,9 @@ else:
     )
 
 
-# ─────────────────────────────────────────────
+
 # TABLA DE DATOS
-# ─────────────────────────────────────────────
+
 st.markdown("---")
 st.subheader("Tabla de establecimientos")
 
